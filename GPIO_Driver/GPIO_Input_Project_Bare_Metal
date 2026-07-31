@@ -1,1 +1,42 @@
 
+#include "stm32f407xx.h"
+
+#define GPIODEN     (1U<<3)
+#define PIN13       (1U<<13)
+#define LED_PIN     PIN13
+
+#define GPIOAEN     (1U<<0)
+#define PIN0        (1U<<0)
+#define PUSH_BUTTON PIN0
+
+int main(void) {
+	// Enable the clock access for GPIO A and D
+	RCC->AHB1ENR  |= GPIODEN;
+	RCC->AHB1ENR  |= GPIOAEN;
+
+
+    // Set PA13 as Output PIN
+	GPIOD->MODER |= (1U<<26);
+	GPIOD->MODER &= ~(1U<<27);
+
+	// Set PA0 to input pin now:
+	GPIOA->MODER &= ~(1<<0);
+	GPIOA->MODER &= ~(1<<1);
+
+
+	while(1) {
+
+		// Check if, button is pressed or not:
+		if(GPIOA->IDR & PUSH_BUTTON)
+
+		{
+		GPIOD-> BSRR = LED_PIN;
+	//        	for(int i=0; i<100000; i++) {}
+		}
+		else {
+		GPIOD->BSRR = (1U<<29); // 29 bit is used becasue PIN 13 is at
+		// BIT 29 at Bit Set Reset mode
+		//              for(int i=0; i<100000; i++){}
+	}
+}
+}
